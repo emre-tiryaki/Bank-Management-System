@@ -1,7 +1,6 @@
 package MainPackage;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -14,15 +13,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 
@@ -36,11 +36,11 @@ public class TransferMoney extends JFrame{
 	private float currentCurrencyAmount;
 	private JTextField amountOfMoneyTextField;
 	private JPanel buttonsPanel;
-	private JButton allMoneyButton;
-	private JButton cancelButton;
+	private RoundedButton allMoneyButton;
+	private RoundedButton cancelButton;
 	private JTextField fullNameTextField;
 	private JTextField customerIdTextField;
-	private JButton sendButton;
+	private RoundedButton sendButton;
 	private float finalCurrencyAmount;
 	private float finalCurrencyAmountOfTheTransfree;
 	DBConnectionHelper helper;
@@ -48,7 +48,7 @@ public class TransferMoney extends JFrame{
 	
 	public TransferMoney(ResultSet accountInfo) {
 		this.setTitle("TRANSFER");
-		this.setSize(690, 400);
+		this.setSize(dimensions.wideFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.transferIcon.getImage());
@@ -82,13 +82,11 @@ public class TransferMoney extends JFrame{
 		buttonsPanel= new JPanel();
 		buttonsPanel.setLayout(new FlowLayout());
 		
-		allMoneyButton = new JButton();
-		allMoneyButton.setText("All money");
+		allMoneyButton = new RoundedButton("All money");
 		allMoneyButton.setSize(100, 40);
 		allMoneyButton.addActionListener(e -> amountOfMoneyTextField.setText(Float.toString(currentCurrencyAmount)));
 		
-		cancelButton = new JButton();
-		cancelButton.setText("Cancel");
+		cancelButton = new RoundedButton("Cancel");
 		cancelButton.setSize(100, 40);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
@@ -144,8 +142,7 @@ public class TransferMoney extends JFrame{
 		customerIdTextField.addMouseListener(new TextFieldMouseListener());
 		customerIdTextField.addFocusListener(new TextFieldFocusListener("Receiver's id"));
 		
-		sendButton = new JButton();
-		sendButton.setText("SEND");
+		sendButton = new RoundedButton("SEND");
 		sendButton.setBorder(null);
 		sendButton.setPreferredSize(new Dimension(100, 40));
 		sendButton.setFocusable(false);
@@ -171,16 +168,16 @@ public class TransferMoney extends JFrame{
 							try {
 								connection = helper.getConnection();
 								Statement statement = connection.createStatement();
-								ResultSet resultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + fullNameTextField.getText() + "' AND id = '" + customerIdTextField.getText() + "';");
+								ResultSet resultSet = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + fullNameTextField.getText() + "' AND id = '" + customerIdTextField.getText() + "';");
 								if(resultSet.next()) {
 									System.out.println("Para göndermek için veritabanı bağlantısı sağlandı!!");
-									PreparedStatement mainPreStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
+									PreparedStatement mainPreStatement = connection.prepareStatement("UPDATE customers SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
 									finalCurrencyAmountOfTheTransfree = resultSet.getFloat(4) + Float.parseFloat(amountOfMoneyTextField.getText().trim());
-									PreparedStatement otherPreStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET money = "+finalCurrencyAmountOfTheTransfree+" where full_name = '"+resultSet.getString(1)+"' and id = '"+resultSet.getString(6)+"';");
+									PreparedStatement otherPreStatement = connection.prepareStatement("UPDATE customers SET money = "+finalCurrencyAmountOfTheTransfree+" where full_name = '"+resultSet.getString(1)+"' and id = '"+resultSet.getString(6)+"';");
 									mainPreStatement.executeUpdate();
 									otherPreStatement.executeUpdate();		
 									JOptionPane.showConfirmDialog(null, "Money transferred", "Success", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
-									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
+									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
 									if(updatedAccountInfo.next()) {
 										new MainAccount(updatedAccountInfo);
 										dispose();

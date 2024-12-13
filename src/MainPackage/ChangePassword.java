@@ -11,30 +11,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 
 public class ChangePassword extends JFrame{
 	private JLabel label;
-	private JTextField newPasswordTextField;
+	private JPasswordField newPasswordTextField;
 	private JPanel buttonsPanel;
-	private JButton changeButton;
-	private JButton cancelButton;
+	private RoundedButton changeButton;
+	private RoundedButton cancelButton;
 	DBConnectionHelper helper;
 	Connection connection;
 	
 	public ChangePassword(ResultSet accountInfo) {
 		this.setTitle("Change Password");
-		this.setSize(300, 300);
+		this.setSize(dimensions.smallFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.passwordIcon.getImage());
@@ -45,10 +46,11 @@ public class ChangePassword extends JFrame{
 		label.setText("new password: ");
 		label.setFont(new Font("", Font.BOLD, 25));
 		
-		newPasswordTextField = new JTextField();
-		newPasswordTextField.setPreferredSize(new Dimension(250, 40));
+		newPasswordTextField = new JPasswordField();
+		newPasswordTextField.setPreferredSize(new Dimension(dimensions.smallFrameDimension.width*8/10, 40));
 		newPasswordTextField.setFont(new Font("",Font.PLAIN, 30));
 		newPasswordTextField.setText("password");
+		newPasswordTextField.setEchoChar('*');
 		newPasswordTextField.setFocusable(false);
 		newPasswordTextField.addMouseListener(new TextFieldMouseListener());
 		newPasswordTextField.addFocusListener(new TextFieldFocusListener("password"));
@@ -57,8 +59,7 @@ public class ChangePassword extends JFrame{
 		buttonsPanel.setSize(300, 100);
 		//buttonsPanel.setBackground(Color.cyan);
 		
-		changeButton = new JButton();
-		changeButton.setText("Change");
+		changeButton = new RoundedButton("Change");
 		changeButton.setSize(100, 40);
 		changeButton.addActionListener(new ActionListener() {	
 			@Override
@@ -70,13 +71,13 @@ public class ChangePassword extends JFrame{
 					
 					try {
 						currentPassword = accountInfo.getInt(2);
-						newPassword = newPasswordTextField.getText().trim().hashCode();
+						newPassword = String.valueOf(newPasswordTextField.getPassword()).trim().hashCode();
 						if(currentPassword == newPassword)
 							System.out.println("Aynı şifre olamaz");
 						else {
 							helper = new DBConnectionHelper();
 							connection = helper.getConnection();
-							PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET password = " + newPassword + " where full_name = '" + accountInfo.getString(1) + "' and password = " + currentPassword + ";");
+							PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET password = " + newPassword + " where full_name = '" + accountInfo.getString(1) + "' and password = " + currentPassword + ";");
 							preStatement.executeUpdate();
 						}
 					} catch (SQLException e1) {
@@ -85,7 +86,7 @@ public class ChangePassword extends JFrame{
 						Statement statement;
 						try {
 							statement = connection.createStatement();
-							ResultSet newResultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + accountInfo.getString(1) + "' AND password = " + newPassword + ";");
+							ResultSet newResultSet = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + accountInfo.getString(1) + "' AND password = " + newPassword + ";");
 							if(newResultSet.next()) {
 								JOptionPane.showConfirmDialog(null, "Password has changed", "Succes", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 								dispose();
@@ -102,8 +103,7 @@ public class ChangePassword extends JFrame{
 			}
 		});
 		
-		cancelButton = new JButton();
-		cancelButton.setText("Cancel");
+		cancelButton = new RoundedButton("Cancel");
 		cancelButton.setSize(100, 40);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override

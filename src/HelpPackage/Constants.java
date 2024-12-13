@@ -1,5 +1,7 @@
 package HelpPackage;
 
+import java.awt.Dimension;
+
 import javax.swing.ImageIcon;
 
 public class Constants {
@@ -16,5 +18,12 @@ public class Constants {
 		public final static ImageIcon forwardIcon = new ImageIcon("C:\\Users\\tirya\\eclipse-workspace\\Management\\Resources\\fast-forward.png");
 		public final static ImageIcon questionIcon = new ImageIcon("C:\\Users\\tirya\\eclipse-workspace\\Management\\Resources\\question.png");
 		public final static ImageIcon payingIcon = new ImageIcon("C:\\Users\\tirya\\eclipse-workspace\\Management\\Resources\\paying.png");		
+	}
+	public static class dimensions{
+		public final static Dimension NormalFrameDimension = new Dimension(400, 450);
+		public final static Dimension smallFrameDimension = new Dimension(300, 300);
+		public final static Dimension tallFrameDimension = new Dimension(400, 550);
+		public final static Dimension bigFrameDimension = new Dimension(600, 600);
+		public final static Dimension wideFrameDimension = new Dimension(800, 450);
 	}
 }

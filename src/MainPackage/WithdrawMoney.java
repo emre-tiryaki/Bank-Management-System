@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,21 +19,21 @@ import javax.swing.JTextField;
 
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 
 public class WithdrawMoney extends JFrame{
 	
-	private static final long serialVersionUID = 1L;
 	private float currentCurrencyAmount;
 	private String currentCurrencyType;
 	private JTextField amountOfMoneyToWithdrawTextField;
 	private JLabel withdrawLabel;
 	private JLabel currentCurrencyLabel;
 	private JPanel buttonsPanel;
-	private JButton withdrawButton;
-	private JButton withdrawAllButton;
-	private JButton cancelButton;
+	private RoundedButton withdrawButton;
+	private RoundedButton withdrawAllButton;
+	private RoundedButton cancelButton;
 	private float finalCurrencyAmount;
 	DBConnectionHelper helper;
 	Connection connection;
@@ -73,8 +72,7 @@ public class WithdrawMoney extends JFrame{
 			buttonsPanel = new JPanel();
 			//buttonsPanel.setBackground(Color.red);
 			
-			withdrawButton = new JButton();
-			withdrawButton.setText("Withdraw");
+			withdrawButton = new RoundedButton("Withdraw");
 			withdrawButton.setSize(100,40);
 			withdrawButton.addActionListener(new ActionListener() {
 				@Override
@@ -89,7 +87,7 @@ public class WithdrawMoney extends JFrame{
 							try {
 								connection = helper.getConnection();
 								System.out.println("Para çekmek için veritabanı bağlantısı sağlandı");
-								PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
+								PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
 								preStatement.executeUpdate();
 								JOptionPane.showConfirmDialog(null, "Money has been withdrawed", "Succes", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 								connection.close();
@@ -99,7 +97,7 @@ public class WithdrawMoney extends JFrame{
 								try {
 									connection = helper.getConnection();
 									Statement statement = connection.createStatement();
-									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
+									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
 									if(updatedAccountInfo.next()) {
 										new MainAccount(updatedAccountInfo);
 										dispose();
@@ -115,13 +113,11 @@ public class WithdrawMoney extends JFrame{
 				}
 			});
 			
-			withdrawAllButton = new JButton();
-			withdrawAllButton.setText("Withdraw All");
+			withdrawAllButton = new RoundedButton("Withdraw All");
 			withdrawAllButton.setSize(100,40);
 			withdrawAllButton.addActionListener(e -> amountOfMoneyToWithdrawTextField.setText(Float.toString(currentCurrencyAmount)));
 			
-			cancelButton = new JButton();
-			cancelButton.setText("Cancel");
+			cancelButton = new RoundedButton("Cancel");
 			cancelButton.setSize(100,40);
 			cancelButton.addActionListener(new ActionListener() {
 				@Override

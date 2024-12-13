@@ -1,6 +1,5 @@
 package MainPackage;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +19,7 @@ import javax.swing.JTextField;
 
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 
@@ -32,8 +31,8 @@ public class DepositMoney extends JFrame{
 	private JLabel depositLabel;
 	private JLabel currentCurrencyLabel;
 	private JPanel buttonsPanel;
-	private JButton depositButton;
-	private JButton cancelButton;
+	private RoundedButton depositButton;
+	private RoundedButton cancelButton;
 	private float finalCurrencyAmount;
 	DBConnectionHelper helper;
 	Connection connection;
@@ -72,8 +71,7 @@ public class DepositMoney extends JFrame{
 			buttonsPanel = new JPanel();
 			//buttonsPanel.setBackground(Color.red);
 			
-			depositButton = new JButton();
-			depositButton.setText("Deposit");
+			depositButton = new RoundedButton("Deposit");
 			depositButton.setSize(100, 40);
 			depositButton.addActionListener(new ActionListener() {
 				@Override
@@ -88,7 +86,7 @@ public class DepositMoney extends JFrame{
 							try {
 								connection = helper.getConnection();
 								System.out.println("Para yatırmak için veritabanı bağlantısı başarılı!!");
-								PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
+								PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET money = "+finalCurrencyAmount+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
 								preStatement.executeUpdate();
 								JOptionPane.showConfirmDialog(null, "Money deposited", "Succes", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 								connection.close();
@@ -98,7 +96,7 @@ public class DepositMoney extends JFrame{
 								try {
 									connection = helper.getConnection();
 									Statement statement = connection.createStatement();
-									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
+									ResultSet updatedAccountInfo = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
 									if(updatedAccountInfo.next()) {
 										new MainAccount(updatedAccountInfo);
 										dispose();
@@ -114,8 +112,7 @@ public class DepositMoney extends JFrame{
 				}
 			});
 			
-			cancelButton = new JButton();
-			cancelButton.setText("Cancel");
+			cancelButton = new RoundedButton("Cancel");
 			cancelButton.setSize(100, 40);
 			cancelButton.addActionListener(new ActionListener() {
 				@Override

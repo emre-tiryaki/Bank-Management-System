@@ -5,25 +5,25 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
+import HelpPackage.RoundedButton;
 import IntroductionPackage.Login;
 
 public class MainAccount extends JFrame{
 
+	private JPanel usersInfoPanel;
 	private JPanel usersNamePanel;
 	private JLabel welcomeLabel;
 	private JPanel usersMoneyPanel;
@@ -31,37 +31,41 @@ public class MainAccount extends JFrame{
 	private float usersCurrency;
 	private JLabel usersMoneyAmount;
 	private JPanel transactionButonsPanel;
-	private JButton depositMoneyButton;
-	private JButton withdrawMoneyButton;
-	private JButton transferMoneyButton;
-	private JButton settingsButton;
-	private JButton quitButton;
+	private RoundedButton depositMoneyButton;
+	private RoundedButton withdrawMoneyButton;
+	private RoundedButton transferMoneyButton;
+	private RoundedButton settingsButton;
+	private RoundedButton quitButton;
 	
 	public MainAccount(ResultSet customerInfo) throws SQLException {
 		this.setTitle("Tiryaki Bank");
-		this.setSize(700, 800);
+		this.setSize(dimensions.wideFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.id_cardIcon.getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLayout(new FlowLayout(FlowLayout.CENTER, 300000, 0));
+		this.setLayout(new GridLayout(1, 2));
+		
+		usersInfoPanel = new JPanel();
+		usersInfoPanel.setPreferredSize(new Dimension(dimensions.wideFrameDimension.width/2, dimensions.wideFrameDimension.height));
+		usersInfoPanel.setLayout(new BorderLayout());
 		
 		//main users name and welcome message panel
 		usersNamePanel = new JPanel();
-		usersNamePanel.setPreferredSize(new Dimension(650, 200));
-		usersNamePanel.setLayout(new BorderLayout());
+		usersNamePanel.setPreferredSize(new Dimension(dimensions.wideFrameDimension.width/2, 200));
+		usersNamePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
 		//usersNamePanel.setBackground(new Color(194, 193, 192));
 		
 		welcomeLabel = new JLabel();
-		welcomeLabel.setText("Welcome " + customerInfo.getString(1));
-		welcomeLabel.setFont(new Font("Robotic",Font.BOLD, 60));
+		welcomeLabel.setText("<html><body style='text-align:center'>" + "Welcome<br>" + customerInfo.getString(1) + "</body></html>");
+		welcomeLabel.setFont(new Font("Robotic",Font.BOLD, 50));
 		
 		usersNamePanel.add(welcomeLabel, BorderLayout.CENTER);
 		
 		usersMoneyPanel = new JPanel();
-		usersMoneyPanel.setPreferredSize(new Dimension(700, 100));
-		usersMoneyPanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
-		usersMoneyPanel.setBackground(Color.red);
+		usersMoneyPanel.setPreferredSize(new Dimension(dimensions.wideFrameDimension.width/2, dimensions.wideFrameDimension.height/7));
+		usersMoneyPanel.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+		usersMoneyPanel.setBackground(new Color(237, 148, 76));
 		
 		usersCurrencyType = customerInfo.getString(5);
 		
@@ -74,19 +78,21 @@ public class MainAccount extends JFrame{
 		
 		usersMoneyPanel.add(usersMoneyAmount);
 		
+		usersInfoPanel.add(usersNamePanel, BorderLayout.NORTH);
+		usersInfoPanel.add(usersMoneyPanel, BorderLayout.SOUTH);
+		
 		transactionButonsPanel = new JPanel();
-		transactionButonsPanel.setPreferredSize(new Dimension(650, 450));
-		transactionButonsPanel.setLayout(new GridLayout(5, 1,10, 20));
+		transactionButonsPanel.setPreferredSize(new Dimension(dimensions.wideFrameDimension.width, dimensions.wideFrameDimension.height));
+		transactionButonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 40));
 		//transactionButonsPanel.setBackground(Color.blue);
 		
-		depositMoneyButton = new JButton();
-		depositMoneyButton.setText("Deposit Money 💸");
+		depositMoneyButton = new RoundedButton("Deposit Money 💸");
 		depositMoneyButton.setBorder(null);
 		depositMoneyButton.setFocusable(false);
 		depositMoneyButton.setSize(100, 20);
-		depositMoneyButton.setBackground(new Color(31, 165, 255));
+		depositMoneyButton.setBackground(new Color(101, 198, 201));
 		depositMoneyButton.setForeground(Color.black);
-		depositMoneyButton.setFont(new Font("",Font.PLAIN,45));
+		depositMoneyButton.setFont(new Font("",Font.PLAIN,35));
 		depositMoneyButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -96,14 +102,13 @@ public class MainAccount extends JFrame{
 			}
 		});
 		
-		withdrawMoneyButton = new JButton();
-		withdrawMoneyButton.setText("Withdraw Money 💲");
+		withdrawMoneyButton = new RoundedButton("Withdraw Money 💲");
 		withdrawMoneyButton.setBorder(null);
 		withdrawMoneyButton.setFocusable(false);
 		withdrawMoneyButton.setSize(100, 20);
-		withdrawMoneyButton.setBackground(new Color(31, 165, 255));
+		withdrawMoneyButton.setBackground(new Color(101, 198, 201));
 		withdrawMoneyButton.setForeground(Color.black);
-		withdrawMoneyButton.setFont(new Font("",Font.PLAIN,45));
+		withdrawMoneyButton.setFont(new Font("",Font.PLAIN,35));
 		withdrawMoneyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -116,20 +121,18 @@ public class MainAccount extends JFrame{
 					}
 					
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
 		
-		transferMoneyButton = new JButton();
-		transferMoneyButton.setText("Transfer Money 💵💨");
+		transferMoneyButton = new RoundedButton("Transfer Money 💵💨");
 		transferMoneyButton.setBorder(null);
 		transferMoneyButton.setFocusable(false);
 		transferMoneyButton.setSize(100, 20);
-		transferMoneyButton.setBackground(new Color(31, 165, 255));
+		transferMoneyButton.setBackground(new Color(101, 198, 201));
 		transferMoneyButton.setForeground(Color.black);
-		transferMoneyButton.setFont(new Font("",Font.PLAIN,45));
+		transferMoneyButton.setFont(new Font("",Font.PLAIN,35));
 		transferMoneyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -141,20 +144,18 @@ public class MainAccount extends JFrame{
 						new TransferMoney(customerInfo);						
 					}
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
 		
-		settingsButton = new JButton();
-		settingsButton.setText("Settings ⚙");
+		settingsButton = new RoundedButton("Settings ⚙");
 		settingsButton.setBorder(null);
 		settingsButton.setFocusable(false);
 		settingsButton.setSize(100, 20);
-		settingsButton.setBackground(new Color(31, 165, 255));
+		settingsButton.setBackground(new Color(101, 198, 201));
 		settingsButton.setForeground(Color.black);
-		settingsButton.setFont(new Font("",Font.PLAIN,45));
+		settingsButton.setFont(new Font("",Font.PLAIN,35));
 		settingsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -163,19 +164,20 @@ public class MainAccount extends JFrame{
 			}
 		});
 		
-		quitButton = new JButton();
-		quitButton.setText("Quit ❌");
+		quitButton = new RoundedButton("Quit ❌");
 		quitButton.setBorder(null);
 		quitButton.setFocusable(false);
 		quitButton.setSize(100, 20);
-		quitButton.setBackground(new Color(31, 165, 255));
+		quitButton.setBackground(new Color(101, 198, 201));
 		quitButton.setForeground(Color.black);
-		quitButton.setFont(new Font("",Font.PLAIN,45));
+		quitButton.setFont(new Font("",Font.PLAIN,35));
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-				new Login();
+				if(JOptionPane.showConfirmDialog(null, "Are you sure to exit?", "Warning", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE) == 0) {
+					dispose();
+					new Login();					
+				}
 			}
 		});
 
@@ -185,8 +187,7 @@ public class MainAccount extends JFrame{
 		transactionButonsPanel.add(settingsButton);
 		transactionButonsPanel.add(quitButton);
 		
-		this.add(usersNamePanel);
-		this.add(usersMoneyPanel);
+		this.add(usersInfoPanel);
 		this.add(transactionButonsPanel);
 		
 		this.setVisible(true);

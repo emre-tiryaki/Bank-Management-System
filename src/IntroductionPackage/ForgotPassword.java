@@ -1,7 +1,6 @@
 package IntroductionPackage;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,11 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.mysql.cj.exceptions.DataTruncationException;
-
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
 
 public class ForgotPassword extends JFrame{
@@ -37,14 +35,14 @@ public class ForgotPassword extends JFrame{
 	private JTextField IdTextField;
 	private JPasswordField newPasswordTextField;
 	private JPanel buttonsPanel;
-	private JButton changeButton;
-	private JButton cancelButton;
+	private RoundedButton changeButton;
+	private RoundedButton cancelButton;
 	DBConnectionHelper helper;
 	Connection connection;
 	
 	public ForgotPassword() {
 		this.setTitle("Login");
-		this.setSize(500, 600);
+		this.setSize(dimensions.NormalFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.id_cardIcon.getImage());
@@ -52,8 +50,8 @@ public class ForgotPassword extends JFrame{
 		this.setLayout(new BorderLayout());
 		
 		mainNamePanel = new JPanel();
-		mainNamePanel.setSize(new Dimension(500, 100));
-		mainNamePanel.setBackground(new Color(194, 193, 192));
+		mainNamePanel.setSize(new Dimension(dimensions.NormalFrameDimension.width, dimensions.NormalFrameDimension.height/5));
+		//mainNamePanel.setBackground(new Color(194, 193, 192));
 		
 		mainNameLabel = new JLabel();
 		mainNameLabel.setText("Zelom Bank");
@@ -64,39 +62,41 @@ public class ForgotPassword extends JFrame{
 		mainNamePanel.add(mainNameLabel);
 		
 		informationEntryPanel = new JPanel();
-		informationEntryPanel.setSize(new Dimension(500, 500));
-		informationEntryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0 ,40));
+		informationEntryPanel.setSize(new Dimension(dimensions.NormalFrameDimension.width, dimensions.NormalFrameDimension.height*3/5));
+		informationEntryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0 ,25));
 		//informationEntryPanel.setBackground(Color.black);
 		
 		usernameTextField = new JTextField();
-		usernameTextField.setPreferredSize(new Dimension(450,40));
+		usernameTextField.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width*7/10,50));
 		usernameTextField.setText("username");
 		usernameTextField.setFocusable(false);
+		usernameTextField.setFont(new Font("",Font.PLAIN,20));
 		usernameTextField.addFocusListener(new TextFieldFocusListener("username"));
 		usernameTextField.addMouseListener(new TextFieldMouseListener());
 		
 		IdTextField = new JTextField();
-		IdTextField.setPreferredSize(new Dimension(450,40));
+		IdTextField.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width*7/10,50));
 		IdTextField.setText("id");
 		IdTextField.setFocusable(false);
+		IdTextField.setFont(new Font("",Font.PLAIN,20));
 		IdTextField.addFocusListener(new TextFieldFocusListener("id"));
 		IdTextField.addMouseListener(new TextFieldMouseListener());
 		
 		newPasswordTextField = new JPasswordField();
-		newPasswordTextField.setPreferredSize(new Dimension(450, 40));
+		newPasswordTextField.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width*7/10, 50));
 		newPasswordTextField.setText("new password");
 		newPasswordTextField.setEchoChar('*');
 		newPasswordTextField.setFocusable(false);
+		newPasswordTextField.setFont(new Font("",Font.PLAIN,20));
 		newPasswordTextField.addFocusListener(new TextFieldFocusListener("new password"));
 		newPasswordTextField.addMouseListener(new TextFieldMouseListener());		
 		
 		buttonsPanel = new JPanel();
-		buttonsPanel.setSize(new Dimension(500, 100));
-		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		buttonsPanel.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width, dimensions.NormalFrameDimension.height/6));
+		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 30));
 		//buttonsPanel.setBackground(Color.BLUE);
 		
-		changeButton = new JButton();
-		changeButton.setText("CHANGE");
+		changeButton = new RoundedButton("CHANGE");
 		changeButton.setPreferredSize(new Dimension(100, 40));
 		changeButton.setBorder(null);
 		changeButton.setFocusable(false);
@@ -113,9 +113,9 @@ public class ForgotPassword extends JFrame{
 						try {
 							connection = helper.getConnection();
 							Statement statement = connection.createStatement();
-							ResultSet resultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '"+fullName+"' and id = "+id+";");
+							ResultSet resultSet = statement.executeQuery("SELECT * FROM customers WHERE full_name = '"+fullName+"' and id = "+id+";");
 							if(resultSet.next()) {
-								PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET password = " + newPassword + " where full_name = '" + fullName + "' and id = " + id + ";");
+								PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET password = " + newPassword + " where full_name = '" + fullName + "' and id = " + id + ";");
 								preStatement.executeUpdate();
 								JOptionPane.showConfirmDialog(null, "password has changed!!", "Successful", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 								connection.close();
@@ -125,7 +125,6 @@ public class ForgotPassword extends JFrame{
 							else
 								System.out.println("hatali input");
 						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -133,8 +132,7 @@ public class ForgotPassword extends JFrame{
 			}
 		});
 		
-		cancelButton = new JButton();
-		cancelButton.setText("CANCEL");
+		cancelButton = new RoundedButton("CANCEL");
 		cancelButton.setPreferredSize(new Dimension(100, 40));
 		cancelButton.setBorder(null);
 		cancelButton.setFocusable(false);

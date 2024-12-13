@@ -11,29 +11,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 
 public class ChangeCurrencyType extends JFrame{
 	private JLabel currentNameLabel;
 	private String[] currencyTypes = {"$-USD","€-EUR","₺-TL","¥-JPY"};
 	private JComboBox<String> currencyTypesComboBox;
 	private JPanel buttonsPanel;
-	private JButton exitButton;
+	private RoundedButton exitButton;
 	DBConnectionHelper helper;
 	Connection connection;
 	ResultSet newResultSet = null;
 	
 	public ChangeCurrencyType(ResultSet accountInfo) {
 		this.setTitle("Change currency type");
-		this.setSize(300, 250);
+		this.setSize(dimensions.smallFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.currencyIcon.getImage());
@@ -65,7 +66,7 @@ public class ChangeCurrencyType extends JFrame{
 							connection = helper.getConnection();
 							System.out.println("Veritabanına bağlandı!");
 							Float newAmountOfMoney = convertCurrency(accountInfo.getString(5), (String)currencyTypesComboBox.getSelectedItem(), accountInfo.getFloat(4));
-							PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET currency_type = '"+currencyTypesComboBox.getSelectedItem().toString().charAt(0)+"', money = "+newAmountOfMoney+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
+							PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET currency_type = '"+currencyTypesComboBox.getSelectedItem().toString().charAt(0)+"', money = "+newAmountOfMoney+" where full_name = '"+accountInfo.getString(1)+"' and password = '"+accountInfo.getString(2)+"';");
 							preStatement.executeUpdate();
 							currentNameLabel.setText("Current currency: " + currencyTypesComboBox.getSelectedItem().toString().charAt(0) + newAmountOfMoney);
 							}
@@ -75,7 +76,7 @@ public class ChangeCurrencyType extends JFrame{
 						Statement statement;
 						try {
 							statement = connection.createStatement();
-							newResultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
+							newResultSet = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + accountInfo.getString(1) + "' AND password = '" + accountInfo.getString(2) + "';");
 							if(!newResultSet.next())
 								System.out.println("olmadi");
 						} catch (SQLException e1) {
@@ -90,8 +91,7 @@ public class ChangeCurrencyType extends JFrame{
 		buttonsPanel.setSize(300, 100);
 		//buttonsPanel.setBackground(Color.cyan);
 				
-		exitButton = new JButton();
-		exitButton.setText("Exit");
+		exitButton = new RoundedButton("Exit");
 		exitButton.setSize(100, 40);
 		exitButton.addActionListener(new ActionListener() {
 			@Override

@@ -1,6 +1,5 @@
 package MainPackage;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,15 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import HelpPackage.Constants.dimensions;
 import HelpPackage.Constants.icons;
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 
@@ -30,19 +30,19 @@ public class ChangeName extends JFrame{
 	private JTextField newNameTextField;
 	private JTextField newSurnameTextField;
 	private JPanel buttonsPanel;
-	private JButton changeButton;
-	private JButton cancelButton;
+	private RoundedButton changeButton;
+	private RoundedButton cancelButton;
 	DBConnectionHelper helper;
 	Connection connection;
 	
 	public ChangeName(ResultSet accountInfo) {
 		this.setTitle("Change Name");
-		this.setSize(300, 400);
+		this.setSize(dimensions.smallFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setIconImage(icons.userIcon.getImage());
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.setLayout(new FlowLayout(FlowLayout.CENTER,0,50));
+		this.setLayout(new FlowLayout(FlowLayout.CENTER,0,30));
 		
 		currentNameLabel = new JLabel();
 		try {
@@ -50,10 +50,10 @@ public class ChangeName extends JFrame{
 		} catch (SQLException e) {
 			System.out.println("geçerli ismi almada hata");
 		}
-		currentNameLabel.setFont(new Font("",Font.PLAIN, 23));
+		currentNameLabel.setFont(new Font("",Font.PLAIN, 20));
 		
 		newNameTextField = new JTextField();
-		newNameTextField.setPreferredSize(new Dimension(250, 40));
+		newNameTextField.setPreferredSize(new Dimension(dimensions.smallFrameDimension.width*8/10, 40));
 		newNameTextField.setFont(new Font("",Font.PLAIN, 30));
 		newNameTextField.setText("new name");
 		newNameTextField.setFocusable(false);
@@ -61,7 +61,7 @@ public class ChangeName extends JFrame{
 		newNameTextField.addFocusListener(new TextFieldFocusListener("new name"));
 		
 		newSurnameTextField = new JTextField();
-		newSurnameTextField.setPreferredSize(new Dimension(250, 40));
+		newSurnameTextField.setPreferredSize(new Dimension(dimensions.smallFrameDimension.width*8/10, 40));
 		newSurnameTextField.setFont(new Font("",Font.PLAIN, 30));
 		newSurnameTextField.setText("new surname");
 		newSurnameTextField.setFocusable(false);
@@ -69,11 +69,10 @@ public class ChangeName extends JFrame{
 		newSurnameTextField.addFocusListener(new TextFieldFocusListener("new surname"));
 		
 		buttonsPanel= new JPanel();
-		buttonsPanel.setSize(300, 100);
+		buttonsPanel.setPreferredSize(new Dimension(dimensions.smallFrameDimension.width, 60));
 		//buttonsPanel.setBackground(Color.cyan);
 		
-		changeButton = new JButton();
-		changeButton.setText("Change");
+		changeButton = new RoundedButton("Change");
 		changeButton.setSize(100, 40);
 		changeButton.addActionListener(new ActionListener() {	
 			@Override
@@ -92,7 +91,7 @@ public class ChangeName extends JFrame{
 							else {
 								helper = new DBConnectionHelper();
 								connection = helper.getConnection();
-								PreparedStatement preStatement = connection.prepareStatement("UPDATE your-initial-database-table-name SET full_name = '" + fullName + "' where full_name = '" + currentName + "' and password = '" + pass + "';");
+								PreparedStatement preStatement = connection.prepareStatement("UPDATE customers SET full_name = '" + fullName + "' where full_name = '" + currentName + "' and password = '" + pass + "';");
 								preStatement.executeUpdate();
 							}
 						} catch (SQLException e1) {
@@ -101,7 +100,7 @@ public class ChangeName extends JFrame{
 							Statement statement;
 							try {
 								statement = connection.createStatement();
-								ResultSet newResultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE full_name = '" + fullName + "' AND password = '" + pass + "';");
+								ResultSet newResultSet = statement.executeQuery("SELECT * FROM customers WHERE full_name = '" + fullName + "' AND password = '" + pass + "';");
 								if(newResultSet.next()) {
 									JOptionPane.showConfirmDialog(null, "Name has changed to " + newResultSet.getString(1), "Succes", JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 									dispose();
@@ -119,8 +118,7 @@ public class ChangeName extends JFrame{
 			}
 		});
 		
-		cancelButton = new JButton();
-		cancelButton.setText("Cancel");
+		cancelButton = new RoundedButton("Cancel");
 		cancelButton.setSize(100, 40);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override

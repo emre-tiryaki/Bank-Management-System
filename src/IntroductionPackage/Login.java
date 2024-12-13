@@ -1,10 +1,10 @@
 package IntroductionPackage;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import HelpPackage.Constants.icons;
+import HelpPackage.Constants.dimensions;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import HelpPackage.DBConnectionHelper;
+import HelpPackage.RoundedButton;
 import HelpPackage.TextFieldFocusListener;
 import HelpPackage.TextFieldMouseListener;
 import MainPackage.MainAccount;
@@ -34,42 +34,42 @@ public class Login extends JFrame{
 	private JPanel informationEntryPanel;
 	private JTextField idTextField;
 	private JPasswordField passwordTextField;
-	private JButton loginButton;
-	private JButton registerButton;
-	private JButton forgotPasswordButton;
+	private RoundedButton loginButton;
+	private RoundedButton registerButton;
+	private RoundedButton forgotPasswordButton;
 	DBConnectionHelper helper;
 	Connection connection;
 	
-	
 	public Login() {
-		this.setTitle("Login");
-		this.setSize(700, 800);
+		this.setTitle("Zelom Bank");
+		this.setSize(dimensions.NormalFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		this.setIconImage(icons.id_cardIcon.getImage());
+		this.setIconImage(icons.bankIcon.getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
 		mainNamePanel = new JPanel();
-		mainNamePanel.setSize(new Dimension(700, 200));
-		mainNamePanel.setBackground(new Color(194, 193, 192));
+		mainNamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		mainNamePanel.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width, dimensions.NormalFrameDimension.height/5));
+		//mainNamePanel.setBackground(new Color(194, 193, 192));
 		
 		mainNameLabel = new JLabel();
 		mainNameLabel.setText("Zelom Bank");
 		mainNameLabel.setIcon(icons.bankIcon);
-		mainNameLabel.setIconTextGap(50);
-		mainNameLabel.setFont(new Font("Roboto",Font.ITALIC,80));
+		mainNameLabel.setIconTextGap(10);
+		mainNameLabel.setFont(new Font("Roboto",Font.ITALIC,50));
 		
 		mainNamePanel.add(mainNameLabel);
 		
 		informationEntryPanel = new JPanel();
-		informationEntryPanel.setPreferredSize(new Dimension(700, 600));
-		informationEntryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 50));
+		informationEntryPanel.setPreferredSize(new Dimension(dimensions.NormalFrameDimension.width, (dimensions.NormalFrameDimension.height*4)/5));
+		informationEntryPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 30));
 		//informationEntryPanel.setBackground(Color.red);
 		
 		idTextField= new JTextField();
 		idTextField.setText("id");
-		idTextField.setPreferredSize(new Dimension(600, 50));
+		idTextField.setPreferredSize(new Dimension((dimensions.NormalFrameDimension.width*70)/100, 50));
 		idTextField.setFont(new Font("",Font.PLAIN, 25));
 		idTextField.setFocusable(false);
 		idTextField.addMouseListener(new TextFieldMouseListener());
@@ -78,14 +78,13 @@ public class Login extends JFrame{
 		passwordTextField = new JPasswordField();
 		passwordTextField.setEchoChar('*');
 		passwordTextField.setText("password");
-		passwordTextField.setPreferredSize(new Dimension(600, 50));
+		passwordTextField.setPreferredSize(new Dimension((dimensions.NormalFrameDimension.width*70)/100, 50));
 		passwordTextField.setFont(new Font("",Font.PLAIN, 25));
 		passwordTextField.setFocusable(false);
 		passwordTextField.addMouseListener(new TextFieldMouseListener());
 		passwordTextField.addFocusListener(new TextFieldFocusListener("password"));
 		
-		loginButton = new JButton();
-		loginButton.setText("LOGIN");
+		loginButton = new RoundedButton("LOGIN");
 		loginButton.setPreferredSize(new Dimension(100, 40));
 		loginButton.setBorder(null);
 		loginButton.setFocusable(false);
@@ -111,7 +110,7 @@ public class Login extends JFrame{
 							connection = helper.getConnection();
 							System.out.println("Veritabanına bağlanıldı!!");
 							statement = connection.createStatement();
-							resultSet = statement.executeQuery("SELECT * FROM your-initial-database-table-name WHERE id = '" + id + "' AND password = " + pass + ";");
+							resultSet = statement.executeQuery("SELECT * FROM customers WHERE id = '" + id + "' AND password = " + pass + ";");
 							if (resultSet.next()) {
 							    new MainAccount(resultSet);
 							    dispose();
@@ -127,10 +126,8 @@ public class Login extends JFrame{
 			}
 		});
 		
-		registerButton = new JButton();
-		registerButton.setText("REGISTER");
+		registerButton = new RoundedButton("REGISTER");
 		registerButton.setPreferredSize(new Dimension(100, 40));
-		registerButton.setBorder(null);
 		registerButton.setFocusable(false);
 		registerButton.addActionListener(new ActionListener() {
 			@Override
@@ -140,8 +137,7 @@ public class Login extends JFrame{
 			}
 		});
 		
-		forgotPasswordButton = new JButton();
-		forgotPasswordButton.setText("FORGOT PASSWORD");
+		forgotPasswordButton = new RoundedButton("FORGOT PASSWORD");
 		forgotPasswordButton.setBorder(null);
 		forgotPasswordButton.setPreferredSize(new Dimension(150, 40));
 		forgotPasswordButton.setFocusable(false);
