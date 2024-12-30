@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DBConnectionHelper {
 	
-	private String username = "root";
-	private String password = "atlantis55";
-	private String dbUrl = "jdbc:mysql://localhost:3306/bank";
+	private String username = "Your-Database-Username";
+	private String password = "Your-Database-pass";
+	private String dbUrl = "Your-Database-URL";
 	
 	Connection connection = null;
 	
