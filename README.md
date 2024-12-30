@@ -20,7 +20,7 @@ This Java application provides a user-friendly interface for managing bank accou
 
 1. Create a MySQL database and a table with the specified columns.
 2. Replace the placeholders "Your-initial-database-username," "Your-initial-database-password," and "Your-initial-database-URL" in the `DBConnectionHelper` class with your actual database credentials.
-3. Replace all the "your-initial-database-table-name" with the table name that you have in your database
+3. Replace all the "your-database-..." with the table name that you have in your database
 
 **Installation:**
 
@@ -50,7 +50,6 @@ This Java application provides a user-friendly interface for managing bank accou
 **Known Issues:**
 
 - Password storage is not secure. Consider using a stronger hashing algorithm like bcrypt or scrypt.
-- Error handling can be improved to provide more informative messages to the user.
 - Input validation should be implemented to prevent invalid data entry.
 
 **Future Enhancements:**
