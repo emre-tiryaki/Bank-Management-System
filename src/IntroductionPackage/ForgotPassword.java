@@ -54,7 +54,7 @@ public class ForgotPassword extends JFrame{
 		//mainNamePanel.setBackground(new Color(194, 193, 192));
 		
 		mainNameLabel = new JLabel();
-		mainNameLabel.setText("Zelom Bank");
+		mainNameLabel.setText("Tiryaki Bank");
 		mainNameLabel.setIcon(icons.bankIcon);
 		mainNameLabel.setIconTextGap(20);
 		mainNameLabel.setFont(new Font("Roboto",Font.ITALIC,50));

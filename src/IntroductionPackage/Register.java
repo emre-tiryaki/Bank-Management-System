@@ -44,7 +44,7 @@ public class Register extends JFrame{
 	Connection connection;
 	
 	Register() {
-		this.setTitle("Zelom Bank");
+		this.setTitle("Tiryaki Bank");
 		this.setSize(dimensions.bigFrameDimension);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
@@ -57,7 +57,7 @@ public class Register extends JFrame{
 		//mainNamePanel.setBackground(new Color(194, 193, 192));
 		
 		mainNameLabel = new JLabel();
-		mainNameLabel.setText("Zelom Bank");
+		mainNameLabel.setText("Tiryaki Bank");
 		mainNameLabel.setIcon(icons.bankIcon);
 		mainNameLabel.setIconTextGap(50);
 		mainNameLabel.setFont(new Font("Roboto",Font.ITALIC,80));
